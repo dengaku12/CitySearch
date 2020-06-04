@@ -5,11 +5,19 @@ class CitySearch extends Component{
     constructor(props){
         super(props);
         this.state = {
-            zipCodes: []
+            zipCodes: [],
+            city: "",
         };
+        this.handleCityChange = this.handleCityChange.bind(this);
     }
-    componentDidMount(){
-        axios.get("http://ctp-zip-api.herokuapp.com/city/SPRINGFIELD")
+    
+    handleCityChange(e){
+        this.setState({
+            city: e.target.value,
+        });
+    }
+    componentDidUpdate(){
+        axios.get(`http://ctp-zip-api.herokuapp.com/city/${this.state.city.toUpperCase()}`)
         .then((response)=>{
             const data = response.data;
             const zipObj = {
@@ -35,7 +43,21 @@ class CitySearch extends Component{
        }
        
        return(
-        <div className= "cityName">{display}</div>
+        <>
+            <div>
+                {this.state.submit}
+                <div>
+                    <label for="CityName">CityName</label>
+                    <input
+                        type="text"
+                        name = "CityName"
+                        value = {this.state.city}
+                        onChange={this.handleCityChange}
+                    />
+                    {display}
+                </div>
+            </div>
+        </>
        ); 
    }
 }
